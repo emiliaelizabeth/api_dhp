@@ -4,7 +4,7 @@ program prjAPI_dhp;
 
 {$R *.res}
 
-uses Horse, System.JSON, Horse.Jhonson, System.SysUtils;
+uses Horse, System.JSON, Horse.Jhonson, Horse.BasicAuthentication, System.SysUtils;
 
 var
   App: THorse;
@@ -15,6 +15,12 @@ begin
   Users := TJSONArray.Create;
 //  App.Use(Jhonson);
   THorse.Use(Jhonson);
+
+  THorse.Use(HorseBasicAuthentication(
+    function(const AUsername, APassword: string): Boolean
+    begin
+      Result := AUsername.Equals('user') and APassword.Equals('password');
+    end));
 
   THorse.Get('/users',
     procedure(Req: THorseRequest; Res: THorseResponse)
